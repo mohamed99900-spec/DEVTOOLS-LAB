@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b13">
+<title>DEVTOOLS LAB — معمل أدوات المطور</title>
+<style>
+:root{--bg:#090b13;--panel:#111522;--panel2:#171c2c;--line:#282e42;--text:#f3f5ff;--muted:#929ab5;--purple:#a78bfa;--cyan:#67e8f9;--green:#86efac;--red:#fda4af}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%,#202047 0,transparent 35%),radial-gradient(ellipse at 90% 30%,#102d3a 0,transparent 30%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+header{max-width:1250px;margin:auto;padding:25px 22px 16px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#a78bfa,#22d3ee);color:#080b14;font-size:24px;font-weight:bold;box-shadow:0 0 30px #8b5cf640}
+h1{font-size:clamp(22px,4vw,32px);margin:0;letter-spacing:-1px}
+.subtitle{color:var(--muted);font-size:12px;margin-top:6px}
+.status{font-size:12px;color:var(--green);border:1px solid #285b4a;background:#10251e;padding:9px 12px;border-radius:30px}
+main{max-width:1250px;margin:auto;padding:10px 22px 40px}
+.hero{border:1px solid #34304d;background:linear-gradient(120deg,#18162cdd,#101a29dd);border-radius:24px;padding:27px;margin:10px 0 24px;position:relative;overflow:hidden}
+.hero:after{content:"</>";position:absolute;left:24px;top:4px;font-size:100px;font-weight:bold;color:#a78bfa0b;pointer-events:none}
+.eyebrow{color:var(--cyan);font-size:12px;letter-spacing:2px}
+.hero h2{font-size:clamp(23px,4vw,38px);margin:12px 0}
+.hero p{color:var(--muted);line-height:1.9;max-width:650px;margin:0}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.stat{background:#ffffff07;border:1px solid var(--line);padding:10px 14px;border-radius:12px;font-size:12px;color:#cbd2e8}
+.layout{display:grid;grid-template-columns:235px minmax(0,1fr);gap:20px;align-items:start}
+nav,.workspace{background:#0e111cdd;border:1px solid var(--line);border-radius:20px;padding:13px}
+.nav-label{font-size:11px;color:var(--muted);padding:9px 10px}
+.nav-btn{display:flex;align-items:center;gap:11px;width:100%;text-align:right;background:transparent;border:1px solid transparent;color:#b7bfd5;border-radius:12px;padding:13px 12px;margin:3px 0;transition:.2s}
+.nav-btn:hover{background:#ffffff08;color:white}
+.nav-btn.active{background:linear-gradient(100deg,#8b5cf626,#22d3ee0b);border-color:#7560b8;color:white}
+.nav-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#ffffff09;font-size:17px}
+.nav-foot{border-top:1px solid var(--line);margin-top:14px;padding:14px 9px 5px;color:var(--muted);font-size:11px;line-height:1.8}
+.workspace{padding:24px;min-width:0}
+.tool-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.tool-head h2{margin:0;font-size:24px}
+.tool-head p{color:var(--muted);font-size:12px;margin:8px 0 0;line-height:1.7}
+.tag{color:var(--cyan);background:#16404a55;border:1px solid #20545f;padding:7px 10px;border-radius:8px;font-size:11px}
+label{display:block;font-size:12px;color:#c6cce0;margin:0 0 9px}
+textarea,input[type=text],input[type=number],input[type=password],select{width:100%;background:#090c15;border:1px solid #30364c;border-radius:11px;padding:13px;color:var(--text);outline:none;transition:.2s}
+textarea{min-height:210px;resize:vertical;line-height:1.8;direction:ltr;text-align:left;font-family:Consolas,monospace;font-size:13px}
+textarea:focus,input:focus,select:focus{border-color:#8b7be6;box-shadow:0 0 0 3px #8b5cf61b}
+.field{margin-bottom:17px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin:13px 0 18px}
+.btn{border:1px solid #343b52;background:#1b2030;color:#e5e7f5;padding:11px 15px;border-radius:10px;font-size:12px;transition:.2s}
+.btn:hover{transform:translateY(-1px);border-color:#7c6acb}
+.btn.primary{background:linear-gradient(110deg,#8b5cf6,#6366f1);border:0;color:white;font-weight:bold}
+.btn.cyan{background:#12313b;border-color:#28606c;color:var(--cyan)}
+.btn.danger{color:var(--red)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.result{padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#ffffff04;color:var(--muted);font-size:12px;line-height:1.8;overflow-wrap:anywhere}
+.result.success{color:var(--green);border-color:#285b4a}
+.result.error{color:var(--red);border-color:#673342}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.small-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.mini{background:#141928;border:1px solid var(--line);padding:15px;border-radius:13px;min-width:0}
+.mini strong{display:block;font-size:22px;color:var(--cyan);margin-bottom:6px;overflow-wrap:anywhere}
+.mini span{font-size:11px;color:var(--muted)}
+.options{display:flex;gap:13px;flex-wrap:wrap}
+.check{display:flex;align-items:center;gap:7px;color:#cbd2e8;font-size:12px}
+.check input{accent-color:#a78bfa;width:16px;height:16px}
+.range-row{display:flex;align-items:center;gap:15px}
+input[type=range]{width:100%;accent-color:#a78bfa}
+.length-number{width:76px!important;text-align:center}
+.password-output{font-family:Consolas,monospace;font-size:17px;direction:ltr;text-align:left;overflow-wrap:anywhere;min-height:55px}
+.meter{height:5px;background:#272b3a;border-radius:10px;margin-top:12px;overflow:hidden}
+.meter div{height:100%;width:0;background:linear-gradient(90deg,#a78bfa,#67e8f9);transition:width .2s}
+.color-preview{height:150px;border-radius:16px;border:1px solid #ffffff22;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;text-shadow:0 2px 12px #0008;transition:background .15s}
+.color-input-row{display:grid;grid-template-columns:60px 1fr;gap:10px}
+input[type=color]{width:60px;height:46px;border:0;background:none;padding:0;cursor:pointer}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.swatch{width:33px;height:33px;border-radius:10px;border:2px solid #ffffff22;cursor:pointer;transition:.2s}
+.swatch:hover{transform:scale(1.12)}
+footer{text-align:center;color:#777f99;font-size:11px;padding:22px 10px}
+.hidden{display:none!important}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#192536;border:1px solid #3c5871;color:#d9f8ff;border-radius:12px;padding:12px 18px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:20;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){.layout{grid-template-columns:1fr}nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}.nav-label,.nav-foot{grid-column:1/-1}.nav-btn{margin:0}.workspace{padding:17px}}
+@media(max-width:480px){header,main{padding-left:12px;padding-right:12px}.hero{padding:20px}.two-col{grid-template-columns:1fr}.small-grid{grid-template-columns:repeat(2,1fr)}.workspace{padding:13px}nav{padding:8px}.nav-btn{font-size:11px;padding:10px 7px;gap:7px}.tool-head h2{font-size:21px}.status{font-size:10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">&lt;/&gt;</div>
+    <div><h1>DEVTOOLS <span style="color:var(--purple)">LAB</span></h1><div class="subtitle">معملك الشخصي لأدوات المطورين</div></div>
+  </div>
+  <div class="status">● الأدوات جاهزة للاستخدام</div>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow">DEVELOPER TOOLKIT / 01</div>
+    <h2>كل أدواتك. <span style="color:var(--purple)">مكان واحد.</span></h2>
+    <p>معمل أدوات برمجية سريع وخفيف. نسّق بياناتك، أنشئ كلمات مرور قوية، حوّل النصوص، حلّل المحتوى، واستكشف الألوان — مباشرة من متصفحك.</p>
+    <div class="stats"><div class="stat">✦ 5 أدوات عملية</div><div class="stat">◈ يعمل محليًا</div><div class="stat">⌘ لا يحتاج تسجيلًا</div><div class="stat">◉ واجهة عربية</div></div>
+  </section>
+  <div class="layout">
+    <nav>
+      <div class="nav-label">الأدوات المتاحة</div>
+      <button class="nav-btn active" data-tool="json"><span class="nav-icon">{ }</span> JSON Studio</button>
+      <button class="nav-btn" data-tool="password"><span class="nav-icon">♙</span> مولّد كلمات المرور</button>
+      <button class="nav-btn" data-tool="base64"><span class="nav-icon">⇄</span> Base64 Lab</button>
+      <button class="nav-btn" data-tool="text"><span class="nav-icon">T</span> Text & Hash Lab</button>
+      <button class="nav-btn" data-tool="color"><span class="nav-icon">◉</span> Color Studio</button>
+      <div class="nav-foot">🔒 خصوصيتك أولًا<br>تتم المعالجة محليًا في المتصفح، ولا تُرسل النصوص إلى خادم.</div>
+    </nav>
+    <section class="workspace">
+      <section class="tool" id="tool-json">
+        <div class="tool-head"><div><h2>JSON Studio</h2><p>تنسيق JSON والتحقق من صحة البيانات.</p></div><span class="tag">DATA FORMATTER</span></div>
+        <div class="field"><label for="jsonInput">JSON INPUT</label><textarea id="jsonInput" spellcheck="false" placeholder='{"name":"Ahmed","active":true,"skills":["HTML","CSS","JavaScript"]}'></textarea></div>
+        <div class="actions"><button class="btn primary" id="jsonFormat">✦ تنسيق JSON</button><button class="btn" id="jsonMinify">ضغط JSON</button><button class="btn cyan" id="jsonValidate">✓ التحقق</button><button class="btn" id="jsonSample">مثال جاهز</button><button class="btn" id="jsonCopy">نسخ الناتج</button><button class="btn danger" id="jsonClear">مسح</button></div>
+        <div class="field"><label for="jsonOutput">OUTPUT</label><textarea id="jsonOutput" readonly placeholder="ستظهر النتيجة هنا..."></textarea></div>
+        <div class="result" id="jsonStatus" aria-live="polite">أدخل JSON ثم اختر العملية المطلوبة.</div>
+      </section>
+      <section class="tool hidden" id="tool-password">
+        <div class="tool-head"><div><h2>مولّد كلمات المرور</h2><p>أنشئ كلمة مرور عشوائية باستخدام مولّد الأمان في المتصفح.</p></div><span class="tag">SECURITY</span></div>
+        <div class="field"><label for="passLength">طول كلمة المرور</label><div class="range-row"><input id="passLength" type="range" min="8" max="128" value="20"><input id="passLengthNum" class="length-number" type="number" min="8" max="128" value="20"></div></div>
+        <div class="field"><label>أنواع الأحرف</label><div class="options">
+          <label class="check"><input type="checkbox" id="passLower" checked> حروف صغيرة a-z</label>
+          <label class="check"><input type="checkbox" id="passUpper" checked> حروف كبيرة A-Z</label>
+          <label class="check"><input type="checkbox" id="passNumbers" checked> أرقام 0-9</label>
+          <label class="check"><input type="checkbox" id="passSymbols" checked> رموز !@#$</label>
+        </div></div>
+        <div class="actions"><button class="btn primary" id="passGenerate">⟳ توليد كلمة مرور</button><button class="btn" id="passCopy">نسخ كلمة المرور</button></div>
+        <div class="result password-output" id="passOutput" aria-live="polite">اضغط توليد لإنشاء كلمة مرور.</div>
+        <div class="meter"><div id="passMeter"></div></div>
+        <div class="result" id="passStatus" style="margin-top:12px">نصيحة: استخدم كلمة مرور فريدة لكل حساب.</div>
+      </section>
+      <section class="tool hidden" id="tool-base64">
+        <div class="tool-head"><div><h2>Base64 Lab</h2><p>تحويل النصوص من وإلى Base64، بما فيها النص العربي وUnicode.</p></div><span class="tag">ENCODE / DECODE</span></div>
+        <div class="field"><label for="baseInput">النص المدخل</label><textarea id="baseInput" placeholder="اكتب النص أو سلسلة Base64 هنا..."></textarea></div>
+        <div class="actions"><button class="btn primary" id="baseEncode">↗ ترميز Base64</button><button class="btn cyan" id="baseDecode">↙ فك الترميز</button><button class="btn" id="baseSwap">نقل الناتج للمدخل</button><button class="btn" id="baseCopy">نسخ الناتج</button><button class="btn danger" id="baseClear">مسح</button></div>
+        <div class="field"><label for="baseOutput">الناتج</label><textarea id="baseOutput" placeholder="النتيجة ستظهر هنا..."></textarea></div>
+        <div class="result" id="baseStatus" aria-live="polite">Base64 ترميز وليس تشفيرًا أمنيًا.</div>
+      </section>
+      <section class="tool hidden" id="tool-text">
+        <div class="tool-head"><div><h2>Text & Hash Lab</h2><p>إحصاءات النصوص وتغيير حالة الأحرف وبصمة SHA-256.</p></div><span class="tag">TEXT ANALYSIS</span></div>
+        <div class="field"><label for="textInput">النص المراد تحليله</label><textarea id="textInput" placeholder="اكتب أو الصق أي نص هنا..."></textarea></div>
+        <div class="small-grid">
+          <div class="mini"><strong id="statChars">0</strong><span>كل الحروف</span></div>
+          <div class="mini"><strong id="statNoSpace">0</strong><span>بدون مسافات</span></div>
+          <div class="mini"><strong id="statWords">0</strong><span>الكلمات</span></div>
+          <div class="mini"><strong id="statLines">0</strong><span>الأسطر</span></div>
+          <div class="mini"><strong id="statBytes">0</strong><span>حجم UTF-8 (بايت)</span></div>
+          <div class="mini"><strong id="statRead">0</strong><span>دقيقة قراءة تقريبًا</span></div>
+        </div>
+        <div class="actions"><button class="btn" id="textUpper">UPPERCASE</button><button class="btn" id="textLower">lowercase</button><button class="btn" id="textTitle">Title Case</button><button class="btn" id="textReverse">عكس النص</button><button class="btn" id="textTrim">إزالة الفراغات الزائدة</button><button class="btn primary" id="textHash">SHA-256</button><button class="btn" id="textCopy">نسخ النص</button></div>
+        <div class="field"><label for="hashOutput">SHA-256 / نتيجة العملية</label><textarea id="hashOutput" readonly placeholder="ستظهر هنا نتيجة العملية..."></textarea></div>
+        <div class="result" id="textStatus" aria-live="polite">يُحسب حجم النص باستخدام UTF-8. مدة القراءة تقديرية.</div>
+      </section>
+      <section class="tool hidden" id="tool-color">
+        <div class="tool-head"><div><h2>Color Studio</h2><p>اختر لونًا واحصل على HEX وRGB وHSL فورًا.</p></div><span class="tag">COLOR CONVERTER</span></div>
+        <div class="color-preview" id="colorPreview"><span id="colorPreviewText">#8B5CF6</span></div>
+        <div class="field"><label for="colorPicker">اختر اللون</label><div class="color-input-row"><input type="color" id="colorPicker" value="#8b5cf6"><input type="text" id="colorHex" value="#8B5CF6" maxlength="7" aria-label="قيمة HEX"></div></div>
+        <div class="two-col">
+          <div class="field"><label for="colorRGB">RGB</label><input type="text" id="colorRGB" readonly></div>
+          <div class="field"><label for="colorHSL">HSL</label><input type="text" id="colorHSL" readonly></div>
+        </div>
+        <div class="actions"><button class="btn primary" id="copyHex">نسخ HEX</button><button class="btn" id="copyRGB">نسخ RGB</button><button class="btn" id="copyHSL">نسخ HSL</button></div>
+        <label>ألوان سريعة</label><div class="swatches" id="swatches"></div>
+        <div class="result" id="colorStatus">اضغط على أي لون سريع لتحديث كل القيم.</div>
+      </section>
+    </section>
+  </div>
+</main>
+<footer>DEVTOOLS LAB · أدواتك تعمل داخل متصفحك · صُنع للمطورين ✦</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+let toastTimer;
+function toast(message){
+  const el=$("toast");el.textContent=message;el.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2300);
+}
+function setStatus(id,message,type=""){
+  const el=$(id);el.textContent=message;el.className="result"+(type?" "+type:"");
+}
+async function copyText(value){
+  if(!value){toast("لا يوجد محتوى لنسخه.");return;}
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(value);
+    }else{
+      const area=document.createElement("textarea");area.value=value;
+      area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);
+      area.select();const ok=document.execCommand("copy");area.remove();
+      if(!ok)throw new Error("copy failed");
+    }
+    toast("تم النسخ بنجاح ✓");
+  }catch{toast("تعذّر النسخ تلقائيًا؛ حدد النص وانسخه يدويًا.");}
+}
+document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b===btn));
+  document.querySelectorAll(".tool").forEach(t=>t.classList.toggle("hidden",t.id!=="tool-"+btn.dataset.tool));
+}));
+/* JSON Studio */
+function jsonOperation(mode){
+  const input=$("jsonInput").value;
+  if(!input.trim()){setStatus("jsonStatus","أدخل بيانات JSON أولًا.","error");return;}
+  try{
+    const value=JSON.parse(input);
+    $("jsonOutput").value=mode==="minify"?JSON.stringify(value):JSON.stringify(value,null,2);
+    setStatus("jsonStatus",mode==="validate"?"JSON صحيح ✓":mode==="minify"?"تم ضغط JSON بنجاح.":"تم تنسيق JSON بنجاح.", "success");
+  }catch(error){
+    $("jsonOutput").value="";
+    setStatus("jsonStatus","خطأ في JSON: "+error.message,"error");
+  }
+}
+$("jsonFormat").addEventListener("click",()=>jsonOperation("format"));
+$("jsonMinify").addEventListener("click",()=>jsonOperation("minify"));
+$("jsonValidate").addEventListener("click",()=>jsonOperation("validate"));
+$("jsonSample").addEventListener("click",()=>{
+  $("jsonInput").value=JSON.stringify({name:"Ahmed",active:true,language:"العربية",skills:["HTML","CSS","JavaScript"],settings:{theme:"dark",notifications:true}},null,2);
+  jsonOperation("format");
+});
+$("jsonCopy").addEventListener("click",()=>copyText($("jsonOutput").value));
+$("jsonClear").addEventListener("click",()=>{$("jsonInput").value="";$("jsonOutput").value="";setStatus("jsonStatus","تم مسح الحقول.");});
+/* Secure password generator */
+$("passLength").addEventListener("input",()=>{$("passLengthNum").value=$("passLength").value;});
+$("passLengthNum").addEventListener("input",()=>{
+  if($("passLengthNum").value!=="")$("passLength").value=Math.max(8,Math.min(128,Number($("passLengthNum").value)));
+});
+function secureIndex(max){
+  if(!Number.isSafeInteger(max)||max<1||max>256)throw new Error("حجم مجموعة الأحرف غير صالح.");
+  const ceiling=Math.floor(256/max)*max;
+  const bytes=new Uint8Array(64);
+  for(let tries=0;tries<100;tries++){
+    crypto.getRandomValues(bytes);
+    for(const byte of bytes)if(byte<ceiling){return byte%max;}
+  }
+  throw new Error("تعذر توليد رقم آمن؛ حاول مجددًا.");
+}
+function secureShuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=secureIndex(i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+function generatePassword(){
+  const sets=[];
+  if($("passLower").checked)sets.push("abcdefghijklmnopqrstuvwxyz");
+  if($("passUpper").checked)sets.push("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  if($("passNumbers").checked)sets.push("0123456789");
+  if($("passSymbols").checked)sets.push("!@#$%^&*()-_=+[]{}:,.?");
+  if(!sets.length){setStatus("passStatus","اختر نوع أحرف واحدًا على الأقل.","error");return;}
+  const length=Math.max(8,Math.min(128,Number($("passLength").value)||20));
+  if(length<sets.length){setStatus("passStatus","الطول أقصر من عدد أنواع الأحرف المختارة.","error");return;}
+  if(!window.crypto||!crypto.getRandomValues){setStatus("passStatus","متصفحك لا يدعم مولّد الأرقام الآمن.","error");return;}
+  try{
+    const all=sets.join("");const chars=sets.map(set=>set[secureIndex(set.length)]);
+    while(chars.length<length)chars.push(all[secureIndex(all.length)]);
+    secureShuffle(chars);
+    const password=chars.join("");$("passOutput").textContent=password;
+    $("passMeter").style.width=Math.min(100,Math.round(length/64*100))+"%";
+    setStatus("passStatus","تم التوليد باستخدام crypto.getRandomValues. احفظ كلمة المرور في مدير كلمات مرور آمن.","success");
+  }catch(e){setStatus("passStatus",e.message||"حدث خطأ أثناء التوليد.","error");}
+}
+$("passGenerate").addEventListener("click",generatePassword);
+$("passCopy").addEventListener("click",()=>copyText($("passOutput").textContent.includes("اضغط توليد")?"":$("passOutput").textContent));
+/* Unicode-safe Base64 */
+function bytesToBinary(bytes){
+  let out="";const step=0x8000;
+  for(let i=0;i<bytes.length;i+=step)out+=String.fromCharCode(...bytes.subarray(i,Math.min(i+step,bytes.length)));
+  return out;
+}
+function encodeBase64(str){return btoa(bytesToBinary(new TextEncoder().encode(str)));}
+function decodeBase64(str){
+  const clean=str.replace(/\s+/g,"");
+  if(clean.length%4===1||!/^[A-Za-z0-9+/]*={0,2}$/.test(clean)||/=/.test(clean.slice(0,-2)))throw new Error("صيغة Base64 غير صحيحة.");
+  const binary=atob(clean);const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+  return new TextDecoder("utf-8",{fatal:true}).decode(bytes);
+}
+$("baseEncode").addEventListener("click",()=>{
+  try{$("baseOutput").value=encodeBase64($("baseInput").value);setStatus("baseStatus","تم ترميز النص بنجاح.","success");}
+  catch(e){setStatus("baseStatus","تعذر الترميز: "+e.message,"error");}
+});
+$("baseDecode").addEventListener("click",()=>{
+  try{$("baseOutput").value=decodeBase64($("baseInput").value);setStatus("baseStatus","تم فك الترميز بنجاح.","success");}
+  catch(e){setStatus("baseStatus","تعذر فك الترميز. تأكد من أن السلسلة Base64 صالحة ونص UTF-8: "+e.message,"error");}
+});
+$("baseSwap").addEventListener("click",()=>{$("baseInput").value=$("baseOutput").value;setStatus("baseStatus","تم نقل الناتج إلى حقل الإدخال.");});
+$("baseCopy").addEventListener("click",()=>copyText($("baseOutput").value));
+$("baseClear").addEventListener("click",()=>{$("baseInput").value="";$("baseOutput").value="";setStatus("baseStatus","تم مسح الحقول.");});
+/* Text analysis */
+function updateTextStats(){
+  const text=$("textInput").value;
+  $("statChars").textContent=Array.from(text).length.toLocaleString("ar-EG");
+  $("statNoSpace").textContent=Array.from(text.replace(/\s/g,"")).length.toLocaleString("ar-EG");
+  $("statWords").textContent=(text.trim()?text.trim().split(/\s+/u).length:0).toLocaleString("ar-EG");
+  $("statLines").textContent=(text?text.split(/\r\n|\r|\n/).length:0).toLocaleString("ar-EG");
+  $("statBytes").textContent=new TextEncoder().encode(text).length.toLocaleString("ar-EG");
+  $("statRead").textContent=(text.trim()?Math.max(1,Math.ceil(text.trim().split(/\s+/u).length/200)):0).toLocaleString("ar-EG");
+}
+$("textInput").addEventListener("input",updateTextStats);
+function transformText(fn){
+  $("hashOutput").value=fn($("textInput").value);
+  setStatus("textStatus","تم تنفيذ العملية.");
+}
+$("textUpper").addEventListener("click",()=>transformText(s=>s.toLocaleUpperCase()));
+$("textLower").addEventListener("click",()=>transformText(s=>s.toLocaleLowerCase()));
+$("textTitle").addEventListener("click",()=>transformText(s=>s.toLocaleLowerCase().replace(/(^|[\s.,!?;:()[\]{}"'])\p{L}/gu,m=>m.toLocaleUpperCase())));
+$("textReverse").addEventListener("click",()=>transformText(s=>Array.from(s).reverse().join("")));
+$("textTrim").addEventListener("click",()=>{
+  $("textInput").value=$("textInput").value.trim().replace(/\s+/gu," ");
+  updateTextStats();$("hashOutput").value=$("textInput").value;setStatus("textStatus","تم حذف الفراغات الزائدة من النص المدخل.");
+});
+$("textCopy").addEventListener("click",()=>copyText($("hashOutput").value||$("textInput").value));
+$("textHash").addEventListener("click",async()=>{
+  const text=$("textInput").value;
+  if(!window.crypto||!crypto.subtle){setStatus("textStatus","SHA-256 يحتاج متصفحًا يدعم Web Crypto. افتح الصفحة عبر localhost أو HTTPS بدل file://.","error");return;}
+  try{
+    const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(text));
+    $("hashOutput").value=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");
+    setStatus("textStatus","تم إنشاء بصمة SHA-256. هذه بصمة وليست تشفيرًا قابلًا للفك.","success");
+  }catch{setStatus("textStatus","تعذر حساب SHA-256. جرّب فتح الصفحة عبر localhost أو HTTPS.","error");}
+});
+/* Color Studio */
+function hexToRgb(hex){
+  const match=/^#?([a-f\d]{3}|[a-f\d]{6})$/i.exec(hex.trim());
+  if(!match)throw new Error("أدخل HEX صالحًا مثل #8B5CF6.");
+  let h=match[1];if(h.length===3)h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+}
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;
+  let h=0,s=0,l=(max+min)/2;
+  if(d!==0){
+    s=d/(1-Math.abs(2*l-1));
+    switch(max){case r:h=((g-b)/d)%6;break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;}
+    h*=60;if(h<0)h+=360;
+  }
+  return [Math.round(h),Math.round(s*100),Math.round(l*100)];
+}
+function updateColor(hex){
+  try{
+    const rgb=hexToRgb(hex);const normalized="#"+rgb.map(v=>v.toString(16).padStart(2,"0")).join("").toUpperCase();
+    const rgbText=`rgb(${rgb.join(", ")})`;const hsl=rgbToHsl(...rgb);const hslText=`hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+    $("colorPicker").value=normalized.toLowerCase();$("colorHex").value=normalized;
+    $("colorRGB").value=rgbText;$("colorHSL").value=hslText;
+    $("colorPreview").style.background=normalized;$("colorPreviewText").textContent=normalized;
+    $("colorPreviewText").style.color=hsl[2]>58?"#111827":"#ffffff";
+    setStatus("colorStatus","تم تحديث قيم اللون.","success");
+  }catch(e){setStatus("colorStatus",e.message,"error");}
+}
+$("colorPicker").addEventListener("input",e=>updateColor(e.target.value));
+$("colorHex").addEventListener("change",e=>updateColor(e.target.value));
+$("copyHex").addEventListener("click",()=>copyText($("colorHex").value));
+$("copyRGB").addEventListener("click",()=>copyText($("colorRGB").value));
+$("copyHSL").addEventListener("click",()=>copyText($("colorHSL").value));
+["#8B5CF6","#22D3EE","#F472B6","#34D399","#FBBF24","#F87171","#FFFFFF","#111827","#64748B","#4F46E5"].forEach(color=>{
+  const swatch=document.createElement("button");swatch.type="button";swatch.className="swatch";swatch.style.background=color;
+  swatch.title=color;swatch.setAttribute("aria-label","اختيار اللون "+color);
+  swatch.addEventListener("click",()=>updateColor(color));$("swatches").appendChild(swatch);
+});
+updateColor("#8B5CF6");
+updateTextStats();
+</script>
+</body>
+</html>
